@@ -1,0 +1,18 @@
+from math import floor
+from adafruit_rplidar import RPLidar
+
+PORT_NAME = '/dev/ttyUSB0'
+lidar = RPLidar(None, port=PORT_NAME, baudrate=256000, timeout=3)
+
+max_distance = 0
+scan_data = [0]*360
+
+try:
+    for scan in lidar.iter_scans():
+        for _,angle,distance in scan:
+            scan_data[min([359,floor(angle)])] = distance
+        print(scan_data)
+except KeyboardInterrupt:
+    print("ok")
+    lidar.stop()
+    lidar.disconnect
